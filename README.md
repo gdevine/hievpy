@@ -26,6 +26,3 @@ Once HIEvPy has been installed, you can import it into a python console or scrip
 ```sh
 from hievpy import hievpy
 ```
-
-
- ROS plot 3, and only keep data after the 1st of May 2013. In this case, it combines three files automatically.
