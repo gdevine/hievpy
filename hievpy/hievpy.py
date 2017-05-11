@@ -7,32 +7,32 @@ import json
 BASE_URL = 'https://hiev.uws.edu.au/'
 
 
-def search_hiev(auth_token,
-                base_url=BASE_URL,
-                full_records=True,
-                from_date=None,
-                to_date=None,
-                filename=None,
-                description=None,
-                file_id=None,
-                record_id=None,
-                stati=None,
-                automation_stati=None,
-                access_rights_types=None,
-                file_formats=None,
-                published=None,
-                unpublished=None,
-                published_date=None,
-                tags=None,
-                labels=None,
-                grant_numbers=None,
-                related_websites=None,
-                facilities=None,
-                experiments=None,
-                variables=None,
-                uploader_id=None,
-                upload_from_date=None,
-                upload_to_date=None):
+def search(auth_token,
+           base_url=BASE_URL,
+           full_records=True,
+           from_date=None,
+           to_date=None,
+           filename=None,
+           description=None,
+           file_id=None,
+           record_id=None,
+           stati=None,
+           automation_stati=None,
+           access_rights_types=None,
+           file_formats=None,
+           published=None,
+           unpublished=None,
+           published_date=None,
+           tags=None,
+           labels=None,
+           grant_numbers=None,
+           related_websites=None,
+           facilities=None,
+           experiments=None,
+           variables=None,
+           uploader_id=None,
+           upload_from_date=None,
+           upload_to_date=None):
 
     """ Returns a list of HIEv records (or their IDs) matching a set of input search parameters.
     
@@ -87,7 +87,7 @@ def search_hiev(auth_token,
 
     Example
     -------
-    myfiles = searchHIEv('3uzsPVNajEf762KRQhXV', full_records=False, experiments=['39'], from_date="2016-08-01")
+    myfiles = search('3uzsPVNajEf762KRQhXV', full_records=False, experiments=['39'], from_date="2016-08-01")
 
     """
 

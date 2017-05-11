@@ -41,14 +41,14 @@ code (particularly if you intend on sharing code). Instead, store your API key i
 #### Search
 To search against the HIEv database, you can use
 ```sh
-hievpy.search_hiev(api_key, <optional args>)
+hievpy.search(api_key, <optional args>)
 ```
 
-Use the help function on *hievpy.search_hiev* to see a full list of optional search arguments.
+Use the help function on *hievpy.search* to see a full list of optional search arguments.
 
 **It is highly recommended that you supply at least one search query to your search to limit returning the full database in one call**
 
 As an example, to search for all records with data for February 2017 from the DriGrass facility and save to a variable called *dgFiles* use:
 ```sh
-dgFiles = hievpy.search_hiev(MY_API_KEY, from_date="2017-02-01", to_date="2017-02-28", facilities = ['14'])
+dgFiles = hievpy.search(MY_API_KEY, from_date="2017-02-01", to_date="2017-02-28", facilities = ['14'])
 ```
