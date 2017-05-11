@@ -33,8 +33,9 @@ def search_hiev(auth_token,
                 uploader_id=None,
                 upload_from_date=None,
                 upload_to_date=None):
-    """
-    Returns a list of full file records (or their IDs) matching a set of input search parameters
+
+    """ Returns a list of HIEv records (or their IDs) matching a set of input search parameters.
+    
     (see https://github.com/IntersectAustralia/dc21-doc/blob/2.3/Search_API.md)
 
     Input
