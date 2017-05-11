@@ -29,10 +29,15 @@ from hievpy import hievpy
 
 
 ### Help
-Docstrings, outlining the full functionality, have been provided against all primary functions and can be accessed using
 
 
 ### Instructions
+
+*Docstrings, outlining the full functionality, have been provided against all primary functions and can be accessed using help(function), for example*
+```sh
+help(search_hiev)
+```
+
 
 All commands available via HIEvPy will require passing in your HIEv API key. Please consider keeping your API key outside of your actual
 code (particularly if you intend in uploading to code repositories). Instead, store your API key in a separate file or in a local environment variable.
