@@ -18,10 +18,7 @@ Note: the 'sudo' command should only be used if you are installing HIEvPy system
 ```sh
 $ pip install --user git+git://github.com/gdevine/hievpy.git
 ```
-Make sure your user install executable directory is on your PATH. For example consider adding this at the end of your ~/.bash_profile file
-```sh
-export PATH="$PATH:/Users/Username/Library/Python/2.7/bin"
-```
+
 Once HIEvPy has been installed, you can import it into a python console or script using:
 ```sh
 from hievpy import hievpy
@@ -47,6 +44,8 @@ hievpy.search_hiev(api_key, <optional args>)
 ```
 
 Use the help function on *hievpy.search_hiev* to see a full list of optional search arguments.
+
+**It is highly recommended that you supply at least one search query to your search to limit returning the full database in one call**
 
 As an example, to search for all records with data for February 2017 from the DriGrass facility and save to a variable called *dgFiles* use:
 ```sh
