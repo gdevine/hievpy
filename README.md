@@ -12,11 +12,12 @@ Pre-requisites required on local machine
 
 You can install HIEvPy directly from the main GitHub repository using:
 ```sh
-$ pip install git+git://github.com/gdevine/hievpy.git
-```
-Note: the 'sudo' command should only be used if you are installing HIEvPy system-wide. Otherwise, you may want to use the “--user” flag for a local user install, e.g.:
-```sh
 $ pip install --user git+git://github.com/gdevine/hievpy.git
+```
+where the "--user" flag is for a local user install. 
+The 'sudo' command should only be used if you are installing HIEvPy system-wide (with admin priviledges):
+```sh
+$ sudo pip install git+git://github.com/gdevine/hievpy.git
 ```
 
 Once HIEvPy has been installed, you can import it into a python console or script using:
@@ -34,7 +35,7 @@ help(hievpy.search_hiev)
 
 
 All commands available via HIEvPy will require passing in your HIEv API key. Please consider keeping your API key outside of your actual
-code (particularly if you intend in uploading to code repositories). Instead, store your API key in a separate file or in a local environment variable.
+code (particularly if you intend on sharing code). Instead, store your API key in a separate file or in a local environment variable.
 
 
 #### Search
