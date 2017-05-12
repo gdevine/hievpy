@@ -1,6 +1,7 @@
 # HIEvPy
 HIEvPy is a python package for interfacing with the [HIEv](https://hiev.westernsydney.edu.au), a data capture application used by the [Hawkesbury Institute for the Environment](https://www.westernsydney.edu.au/hie) at Western Sydney University. HIEvPy provides programmatic shortcuts for the following operations in HIEv:
 - Search
+- Download
 
 
 **To use HIEVPY you must have an account on HIEv.**
