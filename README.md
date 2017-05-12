@@ -78,9 +78,10 @@ The HIEvPy.load function can be used in conjunction with the search function to 
 hievpy.load(api_key, search_record)
 ```
 
-As an example, the following code is used to locate the file called 'FACE_R3_B1_SoilVars_20161130.dat' and load it into memory 
+As an example, the following code is used to locate the file called 'FACE_R3_B1_SoilVars_20161130.dat' and load it into memory.  
+*(Note that face_file[0] is passed to hievpy_load given that the single result from the search is still part of a list.)*
 ```sh
 face_file = hievpy.search(MY_API_KEY, filename="FACE_R3_B1_SoilVars_20161130.dat")
-im_file = hievpy.load(<MY_API_KEY>, face_file)
+im_file = hievpy.load(<MY_API_KEY>, face_file[0])
 ```
 
