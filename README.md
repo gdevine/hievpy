@@ -2,6 +2,7 @@
 HIEvPy is a python package for interfacing with the [HIEv](https://hiev.westernsydney.edu.au), a data capture application used by the [Hawkesbury Institute for the Environment](https://www.westernsydney.edu.au/hie) at Western Sydney University. HIEvPy provides programmatic shortcuts for the following operations in HIEv:
 - Search
 - Download
+- Load
 
 
 **To use HIEVPY you must have an account on HIEv.**
@@ -61,7 +62,7 @@ The HIEvPy.download function can be used in conjunction with the search function
 hievpy.download(api_key, search_record, <optional path>)
 ```
 
-Use the help function on *hievpy.search* to see a full list of optional search arguments.
+Use the help function on *hievpy.download* to see a full list of optional search arguments.
 
 As an example, the following code is used to search for all files with data for March 15th 2017 from the Mini-ROS/DriGrass facility and to download the results to a directory called DG_DATA (directory must exist) 
 ```sh
@@ -70,4 +71,16 @@ for dg_file in dg_files:
     hievpy.download(<MY_API_KEY>, dg_file, path='/Users/<USERNAME>/DG_DATA/')
 ```
 
+
+#### Load
+The HIEvPy.load function can be used in conjunction with the search function to load a file from HIEv into memory  
+```sh
+hievpy.load(api_key, search_record)
+```
+
+As an example, the following code is used to locate the file called 'FACE_R3_B1_SoilVars_20161130.dat' and load it into memory 
+```sh
+face_file = hievpy.search(MY_API_KEY, filename="FACE_R3_B1_SoilVars_20161130.dat")
+im_file = hievpy.load(<MY_API_KEY>, face_file)
+```
 

@@ -154,3 +154,24 @@ def download(api_token,
 
     with open(download_path, 'w') as local_file:
         local_file.write(f.read())
+
+
+def load(api_token,
+         record):
+    """ Loads a file from HIEv into memory given the file record (returned by search function)
+
+    Input
+    -----
+    Required
+    - api_token - HIEv API token/key
+    - record - Download URL of the file in HIEv
+
+    Returns
+    -------
+    File contents in memory
+    """
+
+    # append api key and download the file into memory
+    download_url = record['url'] + '?' + 'auth_token=%s' % api_token
+    request = urllib2.Request(download_url)
+    return urllib2.urlopen(request).read()
