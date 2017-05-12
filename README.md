@@ -52,3 +52,21 @@ As an example, to search for all records with data for February 2017 from the Dr
 ```sh
 dgFiles = hievpy.search(MY_API_KEY, from_date="2017-02-01", to_date="2017-02-28", facilities = ['14'])
 ```
+
+
+#### Download
+The HIEvPy.download function can be used in conjunction with the search function to download a file from HIEv (with option to specify download location)  
+```sh
+hievpy.download(api_key, search_record, <optional path>)
+```
+
+Use the help function on *hievpy.search* to see a full list of optional search arguments.
+
+As an example, the following code is used to search for all files with data for Feb 15th 2017 from the DriGrass facility and to download the results to a directory called DG_DATA (directory must exist) 
+```sh
+dg_files = hievpy.search(MY_API_KEY, from_date="2017-02-15", to_date="2017-02-15", facilities = ['14'])
+for dg_file in dg_files:
+    hievpy.download(MY_API_KEY, dg_file, path='/Users/MY_USERNAME/')
+```
+
+

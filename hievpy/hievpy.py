@@ -1,4 +1,5 @@
 # coding: utf-8
+import os
 import urllib2
 import requests
 import json
@@ -7,7 +8,7 @@ import json
 BASE_URL = 'https://hiev.uws.edu.au/'
 
 
-def search(auth_token,
+def search(api_token,
            base_url=BASE_URL,
            full_records=True,
            from_date=None,
@@ -41,7 +42,7 @@ def search(auth_token,
     Input
     -----
     Required
-    - auth_token - HIEv Authorisation token/key
+    - api_token - HIEv API token/key
 
     Optional
     - base_url - Base URL of the HIEv/Diver instance. Default is 'https://hiev.uws.edu.au'
@@ -96,7 +97,7 @@ def search(auth_token,
     # -- Set up the http search request and handle the returned response
     request_headers = {'Content-Type': 'application/json; charset=UTF-8', 'X-Accept': 'application/json'}
     request_data = json.dumps(
-        {'auth_token': auth_token, 'filename': filename, 'from_date': from_date, 'to_date': to_date,
+        {'auth_token': api_token, 'filename': filename, 'from_date': from_date, 'to_date': to_date,
          'description': description, 'file_id': file_id, 'id': record_id, 'stati': stati,
          'automation_stati': automation_stati, 'access_rights_types': access_rights_types, 'file_formats': file_formats,
          'published': published, 'unpublished': unpublished, 'published_date': published_date, 'tags': tags,
@@ -118,3 +119,38 @@ def search(auth_token,
             ids.append(rec['file_id'])
 
         return ids
+
+
+def download(api_token,
+             record,
+             path=None):
+    """ Downloads a file from HIEv to local computer given the file record (returned by search function)
+    
+    Input
+    -----
+    Required
+    - api_token - HIEv API token/key
+    -record - Download URL of the file in HIEv
+    
+    Optional
+    - path - Full path of download directory (if path not provided, file will be downlaoded to current directory)
+
+    Returns
+    -------
+    N/A
+    Downloads HIEv file to local computer
+    """
+
+    # append api key and download the file into memory
+    download_url = record['url'] + '?' + 'auth_token=%s' % api_token
+    request = urllib2.Request(download_url)
+    f = urllib2.urlopen(request)
+
+    # download file to local file path, or if path not supplied download to current directory
+    if path:
+        download_path = os.path.join(path, record['filename'])
+    else:
+        download_path = record['filename']
+
+    with open(download_path, 'w') as local_file:
+        local_file.write(f.read())
