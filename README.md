@@ -16,7 +16,7 @@ You can install HIEvPy directly from the main GitHub repository using:
 $ pip install --user git+git://github.com/gdevine/hievpy.git
 ```
 where the "--user" flag is for a local user install. 
-The 'sudo' command should only be used if you are installing HIEvPy system-wide (with admin priviledges):
+The 'sudo' command should only be used if you are installing HIEvPy system-wide (with admin privileges):
 ```sh
 $ sudo pip install git+git://github.com/gdevine/hievpy.git
 ```
@@ -51,7 +51,7 @@ Use the help function on *hievpy.search* to see a full list of optional search a
 
 As an example, to search for all records with data for February 2017 from the DriGrass facility and save to a variable called *dgFiles* use:
 ```sh
-dgFiles = hievpy.search(MY_API_KEY, from_date="2017-02-01", to_date="2017-02-28", facilities = ['14'])
+dgFiles = hievpy.search(<MY_API_KEY>, from_date="2017-02-01", to_date="2017-02-28", facilities=['10'])
 ```
 
 
@@ -63,11 +63,11 @@ hievpy.download(api_key, search_record, <optional path>)
 
 Use the help function on *hievpy.search* to see a full list of optional search arguments.
 
-As an example, the following code is used to search for all files with data for Feb 15th 2017 from the DriGrass facility and to download the results to a directory called DG_DATA (directory must exist) 
+As an example, the following code is used to search for all files with data for March 15th 2017 from the Mini-ROS/DriGrass facility and to download the results to a directory called DG_DATA (directory must exist) 
 ```sh
-dg_files = hievpy.search(MY_API_KEY, from_date="2017-02-15", to_date="2017-02-15", facilities = ['14'])
+dg_files = hievpy.search(MY_API_KEY, from_date="2017-03-15", to_date="2017-03-16", facilities=['10'])
 for dg_file in dg_files:
-    hievpy.download(MY_API_KEY, dg_file, path='/Users/MY_USERNAME/')
+    hievpy.download(<MY_API_KEY>, dg_file, path='/Users/<USERNAME>/DG_DATA/')
 ```
 
 
