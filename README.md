@@ -16,7 +16,7 @@ You can install HIEvPy directly from the main GitHub repository using:
 ```sh
 $ pip install --user git+git://github.com/gdevine/hievpy.git
 ```
-where the "--user" flag is for a local user install. 
+where the "--user" flag is for a local user install.
 The 'sudo' command should only be used if you are installing HIEvPy system-wide (with admin privileges):
 ```sh
 $ sudo pip install git+git://github.com/gdevine/hievpy.git
@@ -24,7 +24,7 @@ $ sudo pip install git+git://github.com/gdevine/hievpy.git
 
 Once HIEvPy has been installed, you can import it into a python console or script using:
 ```sh
-from hievpy import hievpy
+import hievpy
 ```
 
 
@@ -57,14 +57,14 @@ dgFiles = hievpy.search(<MY_API_KEY>, from_date="2017-02-01", to_date="2017-02-2
 
 
 #### Download
-The HIEvPy.download function can be used in conjunction with the search function to download a file from HIEv (with option to specify download location)  
+The HIEvPy.download function can be used in conjunction with the search function to download a file from HIEv (with option to specify download location)
 ```sh
 hievpy.download(api_key, search_record, <optional path>)
 ```
 
 Use the help function on *hievpy.download* to see a full list of optional search arguments.
 
-As an example, the following code is used to search for all files with data for March 15th 2017 from the Mini-ROS/DriGrass facility and to download the results to a directory called DG_DATA (directory must exist) 
+As an example, the following code is used to search for all files with data for March 15th 2017 from the Mini-ROS/DriGrass facility and to download the results to a directory called DG_DATA (directory must exist)
 ```sh
 dg_files = hievpy.search(MY_API_KEY, from_date="2017-03-15", to_date="2017-03-16", facilities=['10'])
 for dg_file in dg_files:
@@ -73,15 +73,14 @@ for dg_file in dg_files:
 
 
 #### Load
-The HIEvPy.load function can be used in conjunction with the search function to load a file from HIEv into memory  
+The HIEvPy.load function can be used in conjunction with the search function to load a file from HIEv into memory
 ```sh
 hievpy.load(api_key, search_record)
 ```
 
-As an example, the following code is used to locate the file called 'FACE_R3_B1_SoilVars_20161130.dat' and load it into memory.  
+As an example, the following code is used to locate the file called 'FACE_R3_B1_SoilVars_20161130.dat' and load it into memory.
 *(Note that face_file[0] is passed to hievpy_load given that the single result from the search is still part of a list.)*
 ```sh
 face_file = hievpy.search(MY_API_KEY, filename="FACE_R3_B1_SoilVars_20161130.dat")
 im_file = hievpy.load(<MY_API_KEY>, face_file[0])
 ```
-
