@@ -1,11 +1,15 @@
 # coding: utf-8
 import os
 import urllib2
-import requests
 import json
+import pandas as pd
+import requests
+from StringIO import StringIO
+
 
 # Global variables
 BASE_URL = 'https://hiev.westernsydney.edu.au/'
+api_token = os.environ['HIEV_API_KEY'] # Loading in HIEv API key from environment variable
 
 
 def search(api_token,
@@ -88,7 +92,7 @@ def search(api_token,
 
     Example
     -------
-    myfiles = search('3uzsPVNajEf762KRQhXV', full_records=False, experiments=['39'], from_date="2016-08-01")
+    myfiles = search(api_token, full_records=False, experiments=['39'], from_date="2016-08-01")
 
     """
 
@@ -175,3 +179,11 @@ def load(api_token,
     download_url = record['url'] + '?' + 'auth_token=%s' % api_token
     request = urllib2.Request(download_url)
     return urllib2.urlopen(request).read()
+
+
+def load_df():
+    r = requests.get('https://hiev.westernsydney.edu.au/data_files/227534/download.json?auth_token='+api_token)
+    rtext = r.text
+    rpd_raw = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
+    rpd_formatted = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
+    rpd_formatted = rpd_formatted.iloc[2:, :]
