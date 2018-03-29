@@ -181,9 +181,16 @@ def load(api_token,
     return urllib2.urlopen(request).read()
 
 
-def load_df():
-    r = requests.get('https://hiev.westernsydney.edu.au/data_files/227534/download.json?auth_token='+api_token)
+def load_df(record, formatted=True):
+    # r = requests.get('https://hiev.westernsydney.edu.au/data_files/227534/download.json?auth_token='+api_token)
+    r = requests.get(record['url']+'?auth_token='+api_token)
     rtext = r.text
-    rpd_raw = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
-    rpd_formatted = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
-    rpd_formatted = rpd_formatted.iloc[2:, :]
+    df = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
+
+    if formatted:
+        df = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
+        df = df.iloc[2:, :]
+        df = df.set_index(pd.to_datetime(df['TIMESTAMP']))
+        df = df.apply(pd.to_numeric())
+
+    return df
