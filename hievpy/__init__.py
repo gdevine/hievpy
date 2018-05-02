@@ -1,44 +1,18 @@
 # coding: utf-8
 import os
-import urllib2
+import urllib.request
+import urllib.parse
 import json
 import pandas as pd
 import requests
-from StringIO import StringIO
+import io
 
 
-# Global variables
+# Global Defaults
 BASE_URL = 'https://hiev.westernsydney.edu.au/'
-api_token = os.environ['HIEV_API_KEY'] # Loading in HIEv API key from environment variable
 
 
-def search(api_token,
-           base_url=BASE_URL,
-           full_records=True,
-           from_date=None,
-           to_date=None,
-           filename=None,
-           description=None,
-           file_id=None,
-           record_id=None,
-           stati=None,
-           automation_stati=None,
-           access_rights_types=None,
-           file_formats=None,
-           published=None,
-           unpublished=None,
-           published_date=None,
-           tags=None,
-           labels=None,
-           grant_numbers=None,
-           related_websites=None,
-           facilities=None,
-           experiments=None,
-           variables=None,
-           uploader_id=None,
-           upload_from_date=None,
-           upload_to_date=None):
-
+def search(api_token, base_url=BASE_URL, **kwargs):
     """ Returns a list of HIEv records (or their IDs) matching a set of input search parameters.
     
     (see https://github.com/IntersectAustralia/dc21-doc/blob/2.3/Search_API.md)
@@ -46,11 +20,10 @@ def search(api_token,
     Input
     -----
     Required
-    - api_token - HIEv API token/key
+    - api_token: HIEv API token/key
 
-    Optional
+    Optional keyword arguments
     - base_url - Base URL of the HIEv/Diver instance. Default is 'https://hiev.uws.edu.au'
-    - full_records - Boolean value dictating whether to return full records or just IDs - Default is full records
     - from_date - This is "Date->From Date" in search box of WEB UI: "from_date"=>"2013-01-01"
     - to_date - This is "Date->To Date" in search box of WEB UI: "to_date"=>"2013-01-02"
     - filename - This is "Filename" in search box of WEB UI: "filename"=>"test"
@@ -88,110 +61,94 @@ def search(api_token,
 
     Returns
     -------
-    List of matching hiev search results (with file download url included) OR list of matching file IDs 
+    List of matching hiev search results (with file download url included)
 
     Example
     -------
-    myfiles = search(api_token, full_records=False, experiments=['39'], from_date="2016-08-01")
+    my_files = hievpy.search('MY_API_TOKEN', experiments=['90'], from_date="2016-02-12")
 
     """
 
     request_url = base_url + 'data_files/api_search'
 
-    # -- Set up the http search request and handle the returned response
-    request_headers = {'Content-Type': 'application/json; charset=UTF-8', 'X-Accept': 'application/json'}
-    request_data = json.dumps(
-        {'auth_token': api_token, 'filename': filename, 'from_date': from_date, 'to_date': to_date,
-         'description': description, 'file_id': file_id, 'id': record_id, 'stati': stati,
-         'automation_stati': automation_stati, 'access_rights_types': access_rights_types, 'file_formats': file_formats,
-         'published': published, 'unpublished': unpublished, 'published_date': published_date, 'tags': tags,
-         'labels': labels, 'grant_numbers': grant_numbers, 'related_websites': related_websites,
-         'facilities': facilities, 'experiments': experiments, 'variables': variables, 'uploader_id': uploader_id,
-         'upload_from_date': upload_from_date, 'upload_to_date': upload_to_date})
-    requests.packages.urllib3.disable_warnings()  # ignore ssl warnings from python 2.7.5
-    request = urllib2.Request(request_url, request_data, request_headers)
-    response = urllib2.urlopen(request)
+    request_data = kwargs
+    # Add Auth/API token to request_data
+    request_data['auth_token'] = api_token
 
-    if full_records:
-        return json.load(response)
-    else:
-        records_list = json.load(response)
-        # Create an empty list to hold our IDs
-        ids = []
-        # Loop over each record and pull out the ID field
-        for rec in records_list:
-            ids.append(rec['file_id'])
+    # -- Set up the http request and handle the returned response
+    data = urllib.parse.urlencode(request_data, True)
+    data = data.encode('ascii')
+    req = urllib.request.Request(request_url, data)
+    with urllib.request.urlopen(req) as response:
+        the_page = response.read()
 
-        return ids
+    encoding = response.info().get_content_charset('utf-8')
+    results = json.loads(the_page.decode(encoding))
+
+    return results
 
 
-def download(api_token,
-             record,
-             path=None):
-    """ Downloads a file from HIEv to local computer given the file record (returned by search function)
+def download(api_token, record, path=None):
+    """ Downloads a file from HIEv to local computer given the file record (as returned by search)
     
     Input
     -----
     Required
-    - api_token - HIEv API token/key
-    -record - Download URL of the file in HIEv
+    - api_token: HIEv API token/key
+    - record: record object returned by the search function
     
     Optional
-    - path - Full path of download directory (if path not provided, file will be downlaoded to current directory)
-
-    Returns
-    -------
-    N/A
-    Downloads HIEv file to local computer
+    - path: Full path of download directory (if path not provided, file will be downloaded to current directory)
     """
 
-    # append api key and download the file into memory
     download_url = record['url'] + '?' + 'auth_token=%s' % api_token
-    request = urllib2.Request(download_url)
-    f = urllib2.urlopen(request)
 
-    # download file to local file path, or if path not supplied download to current directory
     if path:
         download_path = os.path.join(path, record['filename'])
+        urllib.request.urlretrieve(download_url, download_path)
     else:
-        download_path = record['filename']
-
-    with open(download_path, 'w') as local_file:
-        local_file.write(f.read())
+        urllib.request.urlretrieve(download_url, record['filename'])
 
 
-def load(api_token,
-         record):
-    """ Loads a file from HIEv into memory given the file record (returned by search function)
+def toa5_to_df(api_token, record):
+    """ Loads a TOA5 file from HIEv into a pandas dataframe given the file record (returned by search function).
 
     Input
     -----
     Required
-    - api_token - HIEv API token/key
-    - record - Download URL of the file in HIEv
+    - api_token: HIEv API token/key
+    - record: record object returned by the search function
 
     Returns
     -------
-    File contents in memory
+    Pandas dataframe of TOA5 data
+
+    NOTE:
+    The top row of the original TOA5 file (logger info etc) is discarded during dataframe creation
     """
 
-    # append api key and download the file into memory
     download_url = record['url'] + '?' + 'auth_token=%s' % api_token
-    request = urllib2.Request(download_url)
-    return urllib2.urlopen(request).read()
+    url_data = requests.get(download_url).content
+    # TODO Check that file is actually a TOA5 file before proceeding....
+    df = pd.read_csv(io.StringIO(url_data.decode('utf-8')), skiprows=1)
 
-
-def load_df(api_token, record, formatted=True):
-    # r = requests.get('https://hiev.westernsydney.edu.au/data_files/227534/download.json?auth_token='+api_token)
-    r = requests.get(record['url'] + '?auth_token=%s' % api_token)
-    rtext = r.text
-    df = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
-
-    if formatted:
-        df = pd.read_table(StringIO(rtext), sep=',', skiprows=1)
-        df = df.iloc[2:, :]
-        df = df.set_index(pd.to_datetime(df['TIMESTAMP']))
-        df = df.drop('TIMESTAMP', axis=1)
-        df = df.apply(pd.to_numeric())
+    # Disregard the units and measurement type rows (whose info can alternatively returned via the toa5_info function)
+    df = df.iloc[2:, :]
+    df = df.set_index('TIMESTAMP')
+    df.index = pd.to_datetime(df.index)
+    df = df.apply(pd.to_numeric)
 
     return df
+
+
+def toa5_info(api_token, record):
+    """ Returns variable information (name, units and measurement type) from a HIEv TOA5 file given the file
+    record (returned by search function).
+    """
+
+    download_url = record['url'] + '?' + 'auth_token=%s' % api_token
+    url_data = requests.get(download_url).content
+    # TODO Check that file is actually a TOA5 file before proceeding....
+    df = pd.read_csv(io.StringIO(url_data.decode('utf-8')), skiprows=1)
+
+    # TO BE COMPLETED
