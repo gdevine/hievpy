@@ -8,5 +8,6 @@ setup(name='hievpy',
       packages=['hievpy'],
       install_requires=[
           'requests',
+          'pandas',
       ],
       )
