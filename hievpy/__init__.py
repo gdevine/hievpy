@@ -6,7 +6,7 @@ import json
 import pandas as pd
 import requests
 import io
-import seaborn as sns
+import tqdm
 
 
 def is_toa5(record):
@@ -29,7 +29,7 @@ def is_toa5(record):
     return False
 
 
-def search(api_token, base_url, **kwargs):
+def search(api_token, base_url='https://hiev.westernsydney.edu.au/', **kwargs):
     """ Returns a list of HIEv records (or their IDs) matching a set of input search parameters.
     
     (see https://github.com/IntersectAustralia/dc21-doc/blob/2.3/Search_API.md)
@@ -127,6 +127,34 @@ def download(api_token, record, path=None):
         urllib.request.urlretrieve(download_url, record['filename'])
 
 
+def search_download(api_token, base_url='https://hiev.westernsydney.edu.au/', path=None, **kwargs):
+    """ Downloads a file from HIEv to local computer given the file record (as returned by search)
+
+    Input
+    -----
+    Required
+    - api_token: HIEv API token/key
+    - record: record object returned by the search function
+
+    Optional
+    - path: Full path of download directory (if path not provided, file will be downloaded to current directory)
+    - See hievpy.search function for full list of optional search keyword arguments
+    """
+
+    results = search(api_token, base_url='https://hiev.westernsydney.edu.au/', **kwargs)
+
+    for result in tqdm.tqdm(results):
+        download_url = result['url'] + '?' + 'auth_token=%s' % api_token
+
+        if path:
+            download_path = os.path.join(path, result['filename'])
+            if not os.path.isfile(download_path):
+                urllib.request.urlretrieve(download_url, download_path)
+        else:
+            if not os.path.isfile(result['filename']):
+                urllib.request.urlretrieve(download_url, result['filename'])
+
+
 def toa5_summary(api_token, record):
     """ Returns variable information (daterange of data, and all variable names, units and measurement types) from a
     HIEv TOA5 file given the file record (returned by search function).
@@ -176,7 +204,7 @@ def toa5_to_df(api_token, record):
         url_data = requests.get(download_url).content
         df = pd.read_csv(io.StringIO(url_data.decode('utf-8')), skiprows=1)
 
-        # Disregard the units and measurement type rows (whose info can alternatively returned via the toa5_info function)
+        # Disregard the units + measurement type rows (whose info can alternatively returned via the toa5_info function)
         df = df.iloc[2:, :]
         df = df.set_index('TIMESTAMP')
         df.index = pd.to_datetime(df.index)
@@ -187,12 +215,46 @@ def toa5_to_df(api_token, record):
         print('Error: This is not a TOA5 record')
 
 
-def plot_toa5_var(api_token, record, variable):
-    if is_toa5(record):
-        df = toa5_to_df(api_token, record)
-        if variable not in df:
-            print('Error: "{0}" does not exist within this TOA5 file'.format(variable))
-        else:
-            df[variable].plot(style='-', color='b', title=variable)
+def search_load_toa5df(api_token, base_url = 'https://hiev.westernsydney.edu.au/', path=None, **kwargs):
+    """ Downloads a file from HIEv to local computer given the file record (as returned by search)
+
+    Input
+    -----
+    Required
+    - api_token: HIEv API token/key
+    - record: record object returned by the search function
+
+    Optional
+    - path: Full path of download directory (if path not provided, file will be downloaded to current directory)
+    """
+
+    results = search(api_token, base_url='https://hiev.westernsydney.edu.au/', **kwargs)
+
+    data = pd.DataFrame()
+
+    for result in tqdm.tqdm(results):
+        download_url = result['url'] + '?' + 'auth_token=%s' % api_token
+        url_data = requests.get(download_url).content
+        df = pd.read_csv(io.StringIO(url_data.decode('utf-8')), skiprows=1)
+
+        # Disregard the units and measurement type rows (whose info can alternatively returned via the toa5_info function)
+        df = df.iloc[2:, :]
+        df = df.set_index('TIMESTAMP')
+        df.index = pd.to_datetime(df.index)
+        df = df.apply(pd.to_numeric)
+        data = pd.concat([data, df])
+
+    if kwargs['from_date']:
+        data = data[kwargs['from_date']:].sort_index()
+
+    if kwargs['to_date']:
+        data = data[:kwargs['to_date']].sort_index()
+
+    return data
+
+
+def plot_toa5df_var(df, variable):
+    if variable not in df:
+        print('Error: "{0}" does not exist within this TOA5 file'.format(variable))
     else:
-        print('Error: This is not a TOA5 record')
+        df[variable].plot(style='-', color='b', title=variable)

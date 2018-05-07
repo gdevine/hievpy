@@ -9,5 +9,6 @@ setup(name='hievpy',
       install_requires=[
           'requests',
           'pandas',
+          'tqdm',
       ],
       )
