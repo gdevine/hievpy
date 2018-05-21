@@ -216,7 +216,9 @@ def toa5_to_df(api_token, record):
         print('Error: This is not a TOA5 record')
 
 
-def search_load_toa5df(api_token, base_url = 'https://hiev.westernsydney.edu.au/', path=None, **kwargs):
+def search_load_toa5df(api_token,
+                       base_url = 'https://hiev.westernsydney.edu.au/',
+                       path=None, **kwargs):
     """ Search 0Loads a file from HIEv to local computer given the file record (as returned by search)
 
     Input
@@ -229,7 +231,8 @@ def search_load_toa5df(api_token, base_url = 'https://hiev.westernsydney.edu.au/
     - path: Full path of download directory (if path not provided, file will be downloaded to current directory)
     """
 
-    results = search(api_token, base_url='https://hiev.westernsydney.edu.au/', **kwargs)
+    results = search(api_token, base_url='https://hiev.westernsydney.edu.au/',
+                     **kwargs)
 
     data = pd.DataFrame()
 
@@ -237,7 +240,7 @@ def search_load_toa5df(api_token, base_url = 'https://hiev.westernsydney.edu.au/
         download_url = result['url'] + '?' + 'auth_token=%s' % api_token
         url_data = requests.get(download_url).content
         df = pd.read_csv(io.StringIO(url_data.decode('utf-8')), skiprows=1,
-                         na_values='NAN')
+                         na_values='NAN', low_memory=False)
 
         # Disregard the units and measurement type rows (whose info can alternatively returned via the toa5_info function)
         df = df.iloc[2:, :]
