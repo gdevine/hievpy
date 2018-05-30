@@ -248,10 +248,10 @@ def search_load_toa5df(api_token,
         df = df.apply(pd.to_numeric)
         data = pd.concat([data, df])
 
-    if kwargs['from_date']:
+    if 'from_date' in kwargs:
         data = data[kwargs['from_date']:].sort_index()
 
-    if kwargs['to_date']:
+    if 'to_date' in kwargs:
         data = data[:kwargs['to_date']].sort_index()
 
     return data
