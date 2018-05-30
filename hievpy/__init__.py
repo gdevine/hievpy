@@ -239,11 +239,10 @@ def search_load_toa5df(api_token,
     for result in tqdm.tqdm(results):
         download_url = result['url'] + '?' + 'auth_token=%s' % api_token
         url_data = requests.get(download_url).content
-        df = pd.read_csv(io.StringIO(url_data.decode('utf-8')), skiprows=1,
-                         na_values='NAN', low_memory=False)
+        df = pd.read_csv(io.StringIO(url_data.decode('utf-8')),
+                         skiprows=[0,2,3], na_values='NAN', low_memory=False)
 
         # Disregard the units and measurement type rows (whose info can alternatively returned via the toa5_info function)
-        df = df.iloc[2:, :]
         df = df.set_index('TIMESTAMP')
         df.index = pd.to_datetime(df.index)
         df = df.apply(pd.to_numeric)
