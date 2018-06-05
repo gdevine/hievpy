@@ -39,23 +39,26 @@ api_token = os.environ['HIEV_API_KEY']
 #
 #
 
-# Set path of file to be uploaded
-upload_file = '/Users/gerarddevine/dev/python/hiev/hievpy/DanData.txt'
+## Set path of file to be uploaded
+#upload_file = '/Users/gerarddevine/dev/python/hiev/hievpy/DanData.txt'
+#
+## -------------------------------------------------------------------------
+## Set metadata variables for upload
+#metadata = {"experiment_id":77,
+#            "type":"RAW",
+#            "description":"This is a dummy description for file upload testing",
+#            "creator_email":"g.devine@westernsydney.edu.au",
+#            "contributor_names":['Tom Smith, t.smith@google.com', 'Jane White, J.White@aol.com', 'Frank Blank, f.black@yahoo.com'],
+#            "label_names":'"Rainfall","Environment","TOA5"',
+#            "grant_numbers": '"ZXY7654","PRQ53422"',
+#            "related_websites":'"http://www.bom.org.au","http://www.westernsydney.edu.au"',
+#            "start_time":'2014-01-01 12:11:10',
+#            "end_time":'2014-12-30 14:09:08'
+#            }
+## -------------------------------------------------------------------------
+#
+#hievpy.upload(api_token, upload_file, metadata)
+#print('complete')
 
-# -------------------------------------------------------------------------
-# Set metadata variables for upload
-metadata = {"experiment_id":77,
-            "type":"RAW",
-            "description":"This is a dummy description for file upload testing",
-            "creator_email":"g.devine@westernsydney.edu.au",
-            "contributor_names":['Tom Smith, t.smith@google.com', 'Jane White, J.White@aol.com', 'Frank Blank, f.black@yahoo.com'],
-            "label_names":'"Rainfall","Environment","TOA5"',
-            "grant_numbers": '"ZXY7654","PRQ53422"',
-            "related_websites":'"http://www.bom.org.au","http://www.westernsydney.edu.au"',
-            "start_time":'2014-01-01 12:11:10',
-            "end_time":'2014-12-30 14:09:08'
-            }
-# -------------------------------------------------------------------------
-
-hievpy.upload(api_token, upload_file, metadata)
-print('complete')
+df = hievpy.search_download(api_token=api_token,
+                            filename='EddyFlux_slow_rad_2018')

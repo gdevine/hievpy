@@ -143,6 +143,7 @@ def search_download(api_token, base_url='https://hiev.westernsydney.edu.au/', pa
     """
 
     results = search(api_token, base_url='https://hiev.westernsydney.edu.au/', **kwargs)
+    print(f'Downloading {len(results)} files:')
 
     for result in tqdm.tqdm(results):
         download_url = result['url'] + '?' + 'auth_token=%s' % api_token
@@ -235,6 +236,7 @@ def search_load_toa5df(api_token,
                      **kwargs)
 
     data = pd.DataFrame()
+    print(f'Loading {len(results)} files:')
 
     for result in tqdm.tqdm(results):
         download_url = result['url'] + '?' + 'auth_token=%s' % api_token
