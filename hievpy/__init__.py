@@ -242,7 +242,7 @@ def search_load_toa5df(api_token,
         download_url = result['url'] + '?' + 'auth_token=%s' % api_token
         url_data = requests.get(download_url).content
         df = pd.read_csv(io.StringIO(url_data.decode('utf-8')),
-                         skiprows=[0,2,3], na_values='NAN', low_memory=False)
+                         skiprows=[0,2,3], na_values='NAN')
 
         # Disregard the units and measurement type rows (whose info can alternatively returned via the toa5_info function)
         df = df.set_index('TIMESTAMP')
