@@ -60,5 +60,4 @@ api_token = os.environ['HIEV_API_KEY']
 #hievpy.upload(api_token, upload_file, metadata)
 #print('complete')
 
-df = hievpy.search_download(api_token=api_token,
-                            filename='EddyFlux_slow_rad_2018')
+df = hievpy.search_download(api_token=api_token, filename='EddyFlux_slow_rad_2018')
