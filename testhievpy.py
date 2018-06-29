@@ -62,15 +62,13 @@ api_token = os.environ['HIEV_API_KEY']
 
 #df = hievpy.search_download(api_token=api_token, filename='EddyFlux_slow_rad_2018')
 
-# Set path of file to be uploaded
-update_file_id = 235591
 
 # -------------------------------------------------------------------------
 # Set metadata variables for upload
-metadata = {
+updates = {
            # "experiment_id":77,
            # "type":"RAW",
-           "description":"Soil moisture probe and soil temp data at TERN site.",
+           "description":"PAR data from understorey sensors at the TERN site.",
            # "creator_email":"g.devine@westernsydney.edu.au",
            # "contributor_names":['Tom Smith, t.smith@google.com', 'Jane White, J.White@aol.com', 'Frank Blank, f.black@yahoo.com'],
            # "label_names":'"Rainfall","Environment","TOA5"',
@@ -81,5 +79,5 @@ metadata = {
            }
 # -------------------------------------------------------------------------
 
-hievpy.update(api_token, update_file_id, metadata)
+hievpy.search_update(api_token, updates, filename='TERNHECT_UNDERPAR', from_date='2018-01-25')
 print('complete')

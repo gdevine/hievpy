@@ -284,19 +284,22 @@ def upload(api_token, upload_file, metadata, base_url = 'https://hiev.uws.edu.au
         print('ERROR - There was a problem uploading the file to HIEv')
 
 
-def update(api_token, file_id, metadata, base_url = 'https://hiev.uws.edu.au/'):
+def search_update(api_token, updates, base_url='https://hiev.westernsydney.edu.au/', **kwargs):
+    """ Updates a file record in HIEv given the file ID (as returned by search)
     """
 
-    """
 
     # upload_url = base_url + 'data_files/api_update' + '?' + 'auth_token=%s' % api_token
     update_url = f'{base_url}data_files/api_update?auth_token={api_token}'
 
-    metadata['file_id'] = file_id
-    response = requests.post(update_url, data=metadata)
+    results = search(api_token, base_url='https://hiev.westernsydney.edu.au/', **kwargs)
 
-    # Print the outcome of the upload
-    if response.status_code == 200:
-        print('File successfully uploaded to HIEv')
-    else:
-        print('ERROR - There was a problem uploading the file to HIEv')
+    print(f'updating {len(results)} files....')
+    for result in tqdm.tqdm(results):
+        updates['file_id'] = result['file_id']
+
+        response = requests.post(update_url, data=updates)
+
+        # Print the outcome of the upload
+        if not response.status_code == 200:
+            print(f"ERROR - There was a problem updating file {result['filename']} to HIEv")
