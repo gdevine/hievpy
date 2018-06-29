@@ -282,3 +282,21 @@ def upload(api_token, upload_file, metadata, base_url = 'https://hiev.uws.edu.au
         print('File successfully uploaded to HIEv')
     else:
         print('ERROR - There was a problem uploading the file to HIEv')
+
+
+def update(api_token, file_id, metadata, base_url = 'https://hiev.uws.edu.au/'):
+    """
+
+    """
+
+    # upload_url = base_url + 'data_files/api_update' + '?' + 'auth_token=%s' % api_token
+    update_url = f'{base_url}data_files/api_update?auth_token={api_token}'
+
+    metadata['file_id'] = file_id
+    response = requests.post(update_url, data=metadata)
+
+    # Print the outcome of the upload
+    if response.status_code == 200:
+        print('File successfully uploaded to HIEv')
+    else:
+        print('ERROR - There was a problem uploading the file to HIEv')
