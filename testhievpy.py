@@ -64,20 +64,21 @@ api_token = os.environ['HIEV_API_KEY']
 
 
 # -------------------------------------------------------------------------
-# Set metadata variables for upload
-updates = {
-           # "experiment_id":77,
-           # "type":"RAW",
-           "description":"PAR data from understorey sensors at the TERN site.",
-           # "creator_email":"g.devine@westernsydney.edu.au",
-           # "contributor_names":['Tom Smith, t.smith@google.com', 'Jane White, J.White@aol.com', 'Frank Blank, f.black@yahoo.com'],
-           # "label_names":'"Rainfall","Environment","TOA5"',
-           # "grant_numbers": '"ZXY7654","PRQ53422"',
-           # "related_websites":'"http://www.bom.org.au","http://www.westernsydney.edu.au"',
-           # "start_time":'2014-01-01 12:11:10',
-           # "end_time":'2014-12-30 14:09:08'
-           }
-# -------------------------------------------------------------------------
-
-hievpy.search_update(api_token, updates, filename='TERNHECT_UNDERPAR', from_date='2018-01-25')
-print('complete')
+## Set metadata variables for upload
+#updates = {
+#           # "experiment_id":77,
+#           # "type":"RAW",
+#           "description":"PAR data from understorey sensors at the TERN site.",
+#           # "creator_email":"g.devine@westernsydney.edu.au",
+#           # "contributor_names":['Tom Smith, t.smith@google.com', 'Jane White, J.White@aol.com', 'Frank Blank, f.black@yahoo.com'],
+#           # "label_names":'"Rainfall","Environment","TOA5"',
+#           # "grant_numbers": '"ZXY7654","PRQ53422"',
+#           # "related_websites":'"http://www.bom.org.au","http://www.westernsydney.edu.au"',
+#           # "start_time":'2014-01-01 12:11:10',
+#           # "end_time":'2014-12-30 14:09:08'
+#           }
+## -------------------------------------------------------------------------
+#
+#results = hievpy.search(api_token, filename='TERNHECT_UNDERPAR', from_date='2018-01-25')
+#
+#hievpy.update(api_token, results, updates)
