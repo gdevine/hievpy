@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="hievpy",
-    version="0.1",
+    version="0.2",
     author="Gerard Devine, Dan Metzen",
     author_email="gerarddevine@gmail.com",
     description="Python wrapper for the HIEv API",
@@ -18,5 +18,10 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ),
+    install_requires=[
+      'pandas',
+      'tqdm',
+      'requests',
+    ],
 )
 
