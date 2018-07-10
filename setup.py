@@ -1,14 +1,22 @@
-from setuptools import setup
+import setuptools
 
-setup(name='hievpy',
-      version='0.1',
-      description='Python helper methods for interacting with the HIEv application',
-      author='gdevine',
-      url='https://github.com/gdevine/hievpy',
-      packages=['hievpy'],
-      install_requires=[
-          'requests',
-          'pandas',
-          'tqdm',
-      ],
-      )
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+    name="hievpy",
+    version="0.1",
+    author="Gerard Devine, Dan Metzen",
+    author_email="gerarddevine@gmail.com",
+    description="Python wrapper for the HIEv API",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/gdevine/hievpy",
+    packages=setuptools.find_packages(),
+    classifiers=(
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ),
+)
+
