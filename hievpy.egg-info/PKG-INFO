@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: hievpy
-Version: 0.1
+Version: 0.2
 Summary: Python wrapper for the HIEv API
 Home-page: https://github.com/gdevine/hievpy
 Author: Gerard Devine, Dan Metzen

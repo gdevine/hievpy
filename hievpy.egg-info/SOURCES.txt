@@ -5,4 +5,5 @@ hievpy/utils.py
 hievpy.egg-info/PKG-INFO
 hievpy.egg-info/SOURCES.txt
 hievpy.egg-info/dependency_links.txt
+hievpy.egg-info/requires.txt
 hievpy.egg-info/top_level.txt
