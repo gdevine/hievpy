@@ -1,31 +1,27 @@
-#HIEvPy
-HIEvPy is a python package for interfacing with the [HIEv](https://hiev.westernsydney.edu.au), a data capture application used by the [Hawkesbury Institute for the Environment](https://www.westernsydney.edu.au/hie) at Western Sydney University. HIEvPy provides programmatic shortcuts for the following operations in HIEv:
-- Search
-- Download
-- Load
 
 > Full documentation, with examples, can be found [here](https://gdevine.github.io/hievpy)
 
-**To use HIEVPY you must have an account on HIEv.**
-### Installation
-Pre-requisites required on local machine
-- Python (python2.7)
-- Pip
-- Git
+### HIEvPy
+HIEvPy is a python wrapper around the API interface of the [HIEv](https://hiev.westernsydney.edu.au), a data capture 
+application used by the [Hawkesbury Institute for the Environment](https://www.westernsydney.edu.au/hie) at [Western 
+Sydney University](https://westernsydney.edu.au). 
 
-You can install HIEvPy directly from the main GitHub repository using:
-```sh
-$ pip install --user git+git://github.com/gdevine/hievpy.git
+**To use HIEvPY you must have an account on HIEv**
+
+### Installation
+HIEvPy can be installed via *pip*:
+
+``` bash
+$ pip install --index-url https://test.pypi.org/simple/ hievpy
 ```
-where the "--user" flag is for a local user install.
-The 'sudo' command should only be used if you are installing HIEvPy system-wide (with admin privileges):
-```sh
-$ sudo pip install git+git://github.com/gdevine/hievpy.git
-```
+
+> Note: HIEvPy is currently hosted on Test PyPi. This will soon be moved to the official PyPi repository
+
 
 Once HIEvPy has been installed, you can import it into a python console or script using:
-```sh
-import hievpy
+
+``` python
+import hievpy as hp
 ```
 
 
