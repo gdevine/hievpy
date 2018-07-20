@@ -1,9 +1,3 @@
-### Overview
-HIEvPy is a python 3 wrapper around the API interface of the [HIEv](https://hiev.westernsydney.edu.au), a data capture 
-application used by the [Hawkesbury Institute for the Environment](https://www.westernsydney.edu.au/hie) at [Western 
-Sydney University](https://westernsydney.edu.au). 
-
-
 ### Pre-requisites
 To use HIEvPY you must have an active account (and subsequently a HIEv API token) on the 
 [**HIEv**](https://hiev.westernsydney.edu.au) application. To discuss registration please contact HIE's data manager, 
@@ -50,10 +44,12 @@ As an example, to search for all records with data for February 2017 from the Dr
 dgFiles = hievpy.search(<MY_API_KEY>, from_date="2017-02-01", to_date="2017-02-28", facilities=['10'])
 ```
 
-A more thorough walkthrough of the HIEvPy search fuction can be found here:\
+A more thorough walkthrough of the HIEvPy search fuction can be found here:
+
 [HIEvPy Search Example](notebooks/hievpy-search.md)
 
-Or, alternatively, download a working jupyter notebook of this example:\
+Or, alternatively, download a working jupyter notebook of this example:
+
 [HIEvPy Search Jupyter Notebook](notebooks/hievpy-search.ipynb)
 
  
