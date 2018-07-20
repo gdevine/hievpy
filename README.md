@@ -1,6 +1,5 @@
 
 # HievPy
-
 A short overview of the HIEvPy library, including installation instructions, is given below. Full 
 documentation, with examples, can be found on the project's [documentation pages](https://gdevine.github.io/hievpy).
 
@@ -33,8 +32,12 @@ import hievpy as hp
 ```
 (using the optional *as hp* as a shortcut)
 
+#### HIEvPy functions
+See the project's [documentation pages](https://gdevine.github.io/hievpy) for a full explanation of all of
+_HIEvPy's_ functions
 
-### License
 
-### Contact
+#### License
+
+#### Contact
 
