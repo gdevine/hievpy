@@ -1,5 +1,5 @@
 
-# HievPy
+# HIEvPy
 A short overview of the HIEvPy library, including installation instructions, is given below. Full 
 documentation, with examples, can be found on the project's [documentation pages](https://gdevine.github.io/hievpy).
 

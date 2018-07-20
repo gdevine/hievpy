@@ -7,8 +7,6 @@ import hievpy as hp
 ```
 
 Load in your API token
-
-
 ```python
 api_token = os.environ['HIEV_API_KEY']
 ```

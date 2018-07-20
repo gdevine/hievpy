@@ -21,7 +21,7 @@ import hievpy
 
 
 ### HIEv API key 
-The majority of commands available via HIEvPy will require passing in your HIEv API key/token for authentication purposes. 
+The majority of HIEvPy functions will require passing in your HIEv API key/token for authentication purposes. 
 It is highly recommended that you keep your API key outside of your actual code (particularly if you intend on sharing 
 code). Instead, store your API token in a private file or in a local environment variable and externally load it into 
 your code, e.g:
@@ -36,7 +36,7 @@ api_token = os.environ['HIEV_API_KEY']
 #### Search
 To search for records within HIEv database, you can use the hievpy _search_ function:
 ```sh
-hievpy.search(api_key, <optional search parameters>)
+hievpy.search(api_token, <optional search parameters>)
 ```
 
 A list of HIEv record objects matching the search parameters will be returned. The optional arguments that can be 
@@ -79,25 +79,27 @@ passed to the search call are outlined below:
 >- upload_to_date - This is "Date Added->To Date" in search box of WEB UI, "upload_to_date"=>"2013-01-02"
 
 
-**It is highly recommended that you supply at least one search query to your search to limit returning the full database in one call**
+**It is highly recommended that you supply at least one search query to your search to limit returning the full 
+database in one call**
 
-As an example, to search for all records with data for February 2017 from the DriGrass facility (id=10) and save to a variable called *dgFiles* use:
+As an example, to search for all records with data for February 2017 from the DriGrass facility (id=10) and save to 
+a variable called *my_files* use:
 ```sh
-dgFiles = hievpy.search(<MY_API_KEY>, from_date="2017-02-01", to_date="2017-02-28", facilities=['10'])
+my_files = hievpy.search(api_token, from_date="2017-02-01", to_date="2017-02-28", facilities=['10'])
 ```
 
 Note that by default the Search function calls out to https://hiev.westernsydney.edu.au (i.e. 
 the HIEv at HIE). You can override this by providing a _base_url_ parameter to the search function, e.g.:
 
 ```sh
-myFiles = hievpy.search(<MY_API_KEY>, base_url='https://myhiev.com.au', from_date="2017-02-01")
+my_files = hievpy.search(api_token, base_url='https://myhiev.com.au', from_date="2017-02-01")
 ```
 
 A more thorough walk-through of the HIEvPy search function can be found here:
 
 [HIEvPy Search Example](notebooks/hievpy-search.md)
 
-Or, alternatively, download a working jupyter notebook of this example:
+Or, alternatively, download a working Jupyter notebook of this example:
 
 [HIEvPy Search Jupyter Notebook](notebooks/hievpy-search.ipynb)
 
@@ -105,14 +107,13 @@ Or, alternatively, download a working jupyter notebook of this example:
 #### Download
 The HIEvPy.download function can be used in conjunction with the search function to download a file from HIEv (with option to specify download location)
 ```sh
-hievpy.download(api_key, search_record, <optional path>)
+hievpy.download(api_token, search_record, <optional path>)
 ```
 
-Use the help function on *hievpy.download* to see a full list of optional search arguments.
-
-As an example, the following code is used to search for all files with data for March 15th 2017 from the Mini-ROS/DriGrass facility and to download the results to a directory called DG_DATA (directory must exist)
+As an example, the following code snippet is used to search for all files with data for March 15th 2017 from the 
+Mini-ROS/DriGrass facility and to download the results to a directory called My_HIEv_DATA (directory must exist)
 ```sh
-dg_files = hievpy.search(MY_API_KEY, from_date="2017-03-15", to_date="2017-03-16", facilities=['10'])
-for dg_file in dg_files:
-    hievpy.download(<MY_API_KEY>, dg_file, path='/Users/<USERNAME>/DG_DATA/')
+my_files = hievpy.search(api_token, from_date="2017-03-15", to_date="2017-03-16", facilities=['10'])
+for my_file in my_files:
+    hievpy.download(api_token, my_file, path='/Users/Me/My_HIEv_DATA/')
 ```
