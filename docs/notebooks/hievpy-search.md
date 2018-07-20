@@ -1,3 +1,4 @@
+### HIEvPy Search
 
 
 ```python
@@ -5,14 +6,15 @@ import os
 import hievpy as hp
 ```
 
-The HievPy library requires your HIEv API token/key to authorize your requests. It is highly recommended that you do not explicitly store your key within this code directly, but rather read it in from a private non-versioned file, or, as here, via an environment variable:  
+Load in your API token
 
 
 ```python
 api_token = os.environ['HIEV_API_KEY']
 ```
 
-Use the hievpy search function to return a list of all files within HIEv that have been uploaded to HIEv since January 1st 2018 and that belong to the EucFACE experiment 
+Use the hievpy search function to return a list of all files within HIEv that have been uploaded to HIEv since 
+January 1st 2018 and that belong to the EucFACE experiment 31
 
 
 ```python
@@ -86,10 +88,3 @@ results[0]['start_time']
 
 
     '2012-09-01T10:00:00+10:00'
-
-
-
-
-```python
-
-```

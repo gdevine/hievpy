@@ -21,9 +21,14 @@ import hievpy
 
 
 ### HIEv API key 
-The majority of commands available via HIEvPy will require passing in your HIEv API key for authentication purposes. 
+The majority of commands available via HIEvPy will require passing in your HIEv API key/token for authentication purposes. 
 It is highly recommended that you keep your API key outside of your actual code (particularly if you intend on sharing 
-code). Instead, store your API key in a private file or in a local environment variable.
+code). Instead, store your API token in a private file or in a local environment variable and externally load it into 
+your code, e.g:
+
+```python
+api_token = os.environ['HIEV_API_KEY']
+```
 
 
 ### HIEvPy Functions
