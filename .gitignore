@@ -10,5 +10,5 @@ build/bdist.macosx-10.7-x86_64/
 dist/hievpy-0.2-py3-none-any.whl
 dist/hievpy-0.2.tar.gz
 hievpy.egg-info/requires.txt
-examples/testhievpy.py
 /examples/Downloads/
+/examples/credentials.py
