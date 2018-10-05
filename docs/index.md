@@ -112,7 +112,7 @@ hievpy.download(api_token, search_record, <optional path>)
 
 As an example, the following code snippet is used to search for all files with data for March 15th 2017 from the 
 Mini-ROS/DriGrass facility and to download the results to a directory called My_HIEv_DATA (directory must exist)
-```sh
+```python
 my_files = hievpy.search(api_token, from_date="2017-03-15", to_date="2017-03-16", facilities=['10'])
 for my_file in my_files:
     hievpy.download(api_token, my_file, path='/Users/Me/My_HIEv_DATA/')
