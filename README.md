@@ -34,14 +34,15 @@ import hievpy as hp
 ### HIEvPy functions
 
 ##### Generic functions
-- search
-- search_download
-- upload
-- update_metadata
+- **search**: Return a list of HIEv records matching a set of input search parameters
+- **search_download**: Perform a hievpy search and automatically downloads the matching files
+- **upload**: Upload a file to HIEv with associated metadata
+- **update_metadata**: Update metadata on a list of records returned by hievpy search
 
 ##### TOA5 functions
-- toa5_summary
-- search_loaf_toa5df
+- **toa5_summary**: Returns toa5 summary information (variable names, units and measurement types) for a given
+    individual search-returned record.
+- **search_loaf_toa5df**: Performs a hievpy search and loads results into a pandas dataframe given the file records
 
 See the project's [documentation pages](https://gdevine.github.io/hievpy) for a full explanation of all **HIEvPy** functions
 
