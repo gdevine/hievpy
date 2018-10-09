@@ -153,7 +153,8 @@ def toa5_summary(api_token, record):
         download_url = f"{record['url']}?auth_token={api_token}"
         req = urllib.request.urlopen(download_url)
         data = req.read()
-        df = pd.read_csv(io.StringIO(data.decode('utf-8')), skiprows=1, header=None)
+        df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                         skiprows=1, header=None)
         for column in df:
             print("  ".join(str(x) for x in df[column][0:3].values))
     else:
@@ -189,12 +190,13 @@ def search_load_toa5df(api_token, base_url, search_params):
         download_url = f"{record['url']}?auth_token={api_token}"
         req = urllib.request.urlopen(download_url)
         data = req.read()
-        df = pd.read_csv(io.StringIO(data.decode('utf-8')), skiprows=[0, 2, 3], na_values='NAN')
+        df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                         skiprows=[0, 2, 3], na_values='NAN')
 
         # Remove the units and measurement type rows
         df = df.set_index('TIMESTAMP')
         df.index = pd.to_datetime(df.index)
-        df = df.apply(pd.to_numeric)
+        df = df.infer_objects()
         df_all = pd.concat([df_all, df])
 
     if 'from_date' in search_params:
