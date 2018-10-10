@@ -205,4 +205,4 @@ def search_load_toa5df(api_token, base_url, search_params):
     if 'to_date' in search_params:
         df_all = df_all[:search_params['to_date']].sort_index()
 
-    return df_all
+    return df_all.sort_index()
