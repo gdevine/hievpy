@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="hievpy",
-    version="0.2",
+    version="0.3.2",
     author="Gerard Devine, Dan Metzen",
     author_email="gerarddevine@gmail.com",
-    description="Python wrapper for the HIEv API",
+    description="Python 3 wrapper for the HIEv Data Capture Application API",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/gdevine/hievpy",
@@ -22,6 +22,7 @@ setuptools.setup(
       'pandas',
       'tqdm',
       'requests',
+      'certifi',
     ],
 )
 

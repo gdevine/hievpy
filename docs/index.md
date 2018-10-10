@@ -1,7 +1,20 @@
-### Pre-requisites
+### Overview
+The [HIEv](https://hiev.westernsydney.edu.au) data capture system, hosted at the Hawkesbury Institute for the 
+Environment (HIE) at Western Sydney University, is an application allowing both automated (e.g via sensor-based 
+networks) and manual upload of data into a secure and centralised data server. Registered users have the ability 
+to explore and download hosted data for further scientific analysis and exploration. At its core the HIEv is designed 
+to facilitate and encourage the sharing of, reuse of, and collaboration around data, thus maximising scientific 
+advancement. The HIEvPy library facilitates interaction with the HIEv application using the Python programming language.
+
+
+### HIEv Use
 To use HIEvPY you must have an active account (and subsequently a HIEv API token) on the 
 [**HIEv**](https://hiev.westernsydney.edu.au) application. To discuss registration please contact HIE's data manager, 
 [Gerry Devine](mailto:g.devine@westernsydney.edu.au)
+
+
+### Prerequisites
+- pandas
 
 
 ### Installation
@@ -16,92 +29,66 @@ $ pip install --index-url https://test.pypi.org/simple/ hievpy
 Once HIEvPy has been installed, you can import it into a python console or script using:
 
 ``` python
-import hievpy
+import hievpy as hp
 ```
+(using the optional *as hp* as a shortcut)
 
 
-### HIEv API key 
+### HIEv API token 
 The majority of HIEvPy functions will require passing in your HIEv API key/token for authentication purposes. 
-It is highly recommended that you keep your API key outside of your actual code (particularly if you intend on sharing 
-code). Instead, store your API token in a private file or in a local environment variable and externally load it into 
-your code, e.g:
+It is important that you keep your API token outside of your actual code (particularly if you intend on sharing 
+code). Instead, either: 
+
+- **(Preferred)** Store your API token in a local environment variable and load it into your code, e.g:
 
 ```python
 api_token = os.environ['HIEV_API_KEY']
 ```
 
+or
+
+- Store your token in a separate file, e.g. create a file called _credentials.py_ and populate it with:
+
+```python
+hiev_api_token = 'MY_API_KEY'
+```   
+
+and then call it in your code with someting like:
+```python
+import credentials as c
+api_token = c.hiev_api_token 
+```   
+
+If choosing the latter, ensure that you do not share this credentials file directly with others.
+
+> Your HIEv API key/token can be found by logging into the HIEv website and clicking on "settings" in the top right and 
+clicking on your account name. 
+
+
+### HIEv Base URL
+Whilst the __HIEvPy__ library was originally written for the HIEv application hosted at HIE, additional 
+instances of the HIEv are now in place at different locations, each with their own web url. It is therefore required to
+pass the 'base url' of the HIEv that you are working with to each of the different __HIEvPy__ functions, e.g.:
+
+```python
+# Set the base URL of the HIEv instance being called against
+base_url = 'https://hiev.westernsydney.edu.au/'
+```   
+    
 
 ### HIEvPy Functions
 
-#### Search
-To search for records within HIEv database, you can use the hievpy _search_ function:
-```sh
-hievpy.search(api_token, <optional search parameters>)
-```
+##### Generic functions
+- **search**: Return a list of HIEv records matching a set of input search parameters [read more...](notebooks/hievpy-search.md)
+- **search_download**: Perform a hievpy search and automatically downloads the matching files
+- **upload**: Upload a file to HIEv with associated metadata
+- **update_metadata**: Update metadata on a list of records returned by hievpy search
 
-A list of HIEv record objects matching the search parameters will be returned. The optional arguments that can be 
-passed to the search call are outlined below:
+##### TOA5 functions
+- **toa5_summary**: Returns toa5 summary information (variable names, units and measurement types) for a given
+    individual search-returned record.
+- **search_loaf_toa5df**: Performs a hievpy search and loads results into a pandas dataframe given the file records
 
-
->- from_date - This is "Date->From Date" in search box of WEB UI: "from_date"=>"2013-01-01"
->- to_date - This is "Date->To Date" in search box of WEB UI: "to_date"=>"2013-01-02"
->- filename - This is "Filename" in search box of WEB UI: "filename"=>"test"
->- description - This is "Description" in search box of WEB UI: "description"=>"test"
->- file_id - This is "File ID" in search box of WEB UI: "file_id"=>"test"
->- id (here replaced as record_id)- This is "ID" in search box of WEB UI: "id"=>"26"
->- stati - This is "Type" in search box of WEB UI: "stati"=>["RAW", "CLEANSED"]
->- automation_stati - This is "Automation Status" in search box of WEB UI, "automation_stati"=>["COMPLETE",
->  "WORKING"]
->- access_rights_types - This is the "Access Rights Type" in the search box of the WEB UI: "access_rights_types"=>
->  ["Open", "Conditional", "Restricted"]
->- file_formats - This is "File Formats" in search box of WEB UI, "file_formats"=>["TOA5", "Unknown", "audio/mpeg"]
->- published - This is "Type->PACKAGE->Published" in search box of WEB UI: "stati"=>["PACKAGE"], "published"=>
->  ["true"]
->- unpublished - This is "Type->PACKAGE->Published" in search box of WEB UI: "stati"=>["PACKAGE"], "unpublished"=>
->  ["true"].
->- published_date - This is "Type->PACKAGE->Published Date" in search box of WEB UI: "stati"=>["PACKAGE"],
->  "published_date"=>"2013-01-01"
->- tags - This is "Tags" in search box of WEB UI: "tags"=>["4", "5"]
->- labels - This is "Labels" in search box of WEB UI, "labels"=>["label_name_1", "label_name_2"]
->- grant_numbers - This is the "Grant Numbers" in search box of WEB UI, "grant_numbers"=>["grant_number_1",
->  "grant_number_2"]
->- related_websites - This is the "Related Websites" in the search box of WEB UI, "related_websites"=>
->  ["http://www.intersect.org.au"]
->- facilities - This is "Facility" in search box of WEB UI, ask system administrator to get facility ids :
->  "facilities"=>["27"]
->- experiments - This is "Facility" in search box of WEB UI, when one facility is clicked, experiments of this
->  facility are selectable, ask system administrator to get experiment ids: "experiments"=>["58", "54"]
->- variables - This is "Columns" in search box of WEB UI, when one group is clicked, columns of this group are
->  selectable: "variables"=>["SoilTempProbe_Avg(1)", "SoilTempProbe_Avg(3)"]
->- uploader_id - This is "Added By" in search box of WEB UI, ask system administrator to get uploader ids:
->  "uploader_id"=>"83"
->- upload_from_date - This is "Date Added->From Date" in search box of WEB UI, "upload_from_date"=>"2013-01-01"
->- upload_to_date - This is "Date Added->To Date" in search box of WEB UI, "upload_to_date"=>"2013-01-02"
-
-
-**It is highly recommended that you supply at least one search query to your search to limit returning the full 
-database in one call**
-
-As an example, to search for all records with data for February 2017 from the DriGrass facility (id=10) and save to 
-a variable called *my_files* use:
-```sh
-my_files = hievpy.search(api_token, from_date="2017-02-01", to_date="2017-02-28", facilities=['10'])
-```
-
-Note that by default the Search function calls out to https://hiev.westernsydney.edu.au (i.e. 
-the HIEv at HIE). You can override this by providing a _base_url_ parameter to the search function, e.g.:
-
-```sh
-my_files = hievpy.search(api_token, base_url='https://myhiev.com.au', from_date="2017-02-01")
-```
-
-A more thorough walk-through of the HIEvPy search function can be found here:
-
-[HIEvPy Search Example](notebooks/hievpy-search.md)
-
-Or, alternatively, download a working Jupyter notebook of this example:
-
-[HIEvPy Search Jupyter Notebook](notebooks/hievpy-search.ipynb)
 
  
 #### Download

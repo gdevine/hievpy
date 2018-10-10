@@ -7,8 +7,8 @@
 
 Data/
 build/bdist.macosx-10.7-x86_64/
-dist/hievpy-0.2-py3-none-any.whl
-dist/hievpy-0.2.tar.gz
 hievpy.egg-info/requires.txt
 /examples/Downloads/
 /examples/credentials.py
+/examples/.ipynb_checkpoints/
+/dist/
