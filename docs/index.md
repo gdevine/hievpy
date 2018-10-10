@@ -1,4 +1,4 @@
-### Overview
+## Overview
 The [HIEv](https://hiev.westernsydney.edu.au) data capture system, hosted at the Hawkesbury Institute for the 
 Environment (HIE) at Western Sydney University, is an application allowing both automated (e.g via sensor-based 
 networks) and manual upload of data into a secure and centralised data server. Registered users have the ability 
@@ -7,17 +7,17 @@ to facilitate and encourage the sharing of, reuse of, and collaboration around d
 advancement. The HIEvPy library facilitates interaction with the HIEv application using the Python programming language.
 
 
-### HIEv Use
+## HIEv Use
 To use HIEvPY you must have an active account (and subsequently a HIEv API token) on the 
 [**HIEv**](https://hiev.westernsydney.edu.au) application. To discuss registration please contact HIE's data manager, 
 [Gerry Devine](mailto:g.devine@westernsydney.edu.au)
 
 
-### Prerequisites
+## Prerequisites
 - pandas
 
 
-### Installation
+## Installation
 HIEvPy can be installed via *pip*:
 
 ``` bash
@@ -34,7 +34,7 @@ import hievpy as hp
 (using the optional *as hp* as a shortcut)
 
 
-### HIEv API token 
+## HIEv API token 
 The majority of HIEvPy functions will require passing in your HIEv API key/token for authentication purposes. 
 It is important that you keep your API token outside of your actual code (particularly if you intend on sharing 
 code). Instead, either: 
@@ -65,7 +65,7 @@ If choosing the latter, ensure that you do not share this credentials file direc
 clicking on your account name. 
 
 
-### HIEv Base URL
+## HIEv Base URL
 Whilst the __HIEvPy__ library was originally written for the HIEv application hosted at HIE, additional 
 instances of the HIEv are now in place at different locations, each with their own web url. It is therefore required to
 pass the 'base url' of the HIEv that you are working with to each of the different __HIEvPy__ functions, e.g.:
@@ -76,11 +76,11 @@ base_url = 'https://hiev.westernsydney.edu.au/'
 ```   
     
 
-### HIEvPy Functions
+## HIEvPy Functions
 
 ##### Generic functions
-- **search**: Return a list of HIEv records matching a set of input search parameters [read more...](notebooks/hievpy-search.md)
-- **search_download**: Perform a hievpy search and automatically downloads the matching files
+- **search**: Return a list of HIEv records matching a set of input search parameters [read more...](notebooks/hievpy_search.md)
+- **search_download**: Perform a hievpy search and automatically download the matching files [read more...](notebooks/hievpy_search_download.md)
 - **upload**: Upload a file to HIEv with associated metadata
 - **update_metadata**: Update metadata on a list of records returned by hievpy search
 
@@ -90,17 +90,3 @@ base_url = 'https://hiev.westernsydney.edu.au/'
 - **search_loaf_toa5df**: Performs a hievpy search and loads results into a pandas dataframe given the file records
 
 
- 
-#### Download
-The HIEvPy.download function can be used in conjunction with the search function to download a file from HIEv (with option to specify download location)
-```sh
-hievpy.download(api_token, search_record, <optional path>)
-```
-
-As an example, the following code snippet is used to search for all files with data for March 15th 2017 from the 
-Mini-ROS/DriGrass facility and to download the results to a directory called My_HIEv_DATA (directory must exist)
-```python
-my_files = hievpy.search(api_token, from_date="2017-03-15", to_date="2017-03-16", facilities=['10'])
-for my_file in my_files:
-    hievpy.download(api_token, my_file, path='/Users/Me/My_HIEv_DATA/')
-```

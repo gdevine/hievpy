@@ -3,7 +3,7 @@ To search for records within HIEv database, you can use the hievpy _search_ func
 
 ```sh
 import hievpy as hp
-py.search(api_token, base_url, search_params)
+hp.search(api_token, base_url, search_params)
 ```
 
 A list of HIEv record objects matching the search parameters will be returned. The optional arguments that can be 
