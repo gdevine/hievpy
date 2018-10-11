@@ -6,6 +6,8 @@ import requests
 import io
 import tqdm
 from pathlib import Path
+import os
+import shutil
 from hievpy.utils import *
 
 
@@ -161,15 +163,25 @@ def toa5_summary(api_token, record):
         print('Error: This is not a TOA5 record')
 
 
-def search_load_toa5df(api_token, base_url, search_params):
+def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
+                       keep_files=False, dst_folder='./raw_data'):
     """ Performs a hievpy search and loads results into a pandas dataframe given the file records
 
     Input
     -----
     Required
     - api_token: HIEv API token/key
-    - base_url: Base URL of the HIEv/Diver instance, e.g. 'https://hiev.uws.edu.au'
+    - base_url: Base URL of the HIEv/Diver instance, e.g. 'https://hiev.uws.edu.au/'
     - search_params: Object containing metadata key-value pairs for searching
+    Optional:
+    - biggish_data: boolean
+        If True files will be downloaded and datatypes optimized for memory
+        usage. Handy for large time series and/or using shitty computers.
+    - keep_files: boolean
+        If True will keep files after importing into dataframe.
+    - dst_folder: string
+        Path to folder files will be downloaded to.
+
 
     Returns
     -------
@@ -180,28 +192,98 @@ def search_load_toa5df(api_token, base_url, search_params):
     during dataframe creation. This information can alternatively be found via the toa5_summary function.
 
     """
-
+    # search records
     records = search(api_token, base_url, search_params)
 
-    df_all = pd.DataFrame()
-    print(f'Loading {len(records)} files:')
+    # use 'biggish data' mode
+    if biggish_data:
+        # set and create download folder if it does not exist
+        dst_folder = Path(dst_folder)
+        if not dst_folder.is_dir():
+            os.makedirs(dst_folder)
 
-    for record in tqdm.tqdm(records):
-        download_url = f"{record['url']}?auth_token={api_token}"
-        req = urllib.request.urlopen(download_url)
-        data = req.read()
-        df = pd.read_csv(io.StringIO(data.decode('utf-8')),
-                         skiprows=[0, 2, 3], na_values='NAN')
+        # display number of files beeing downloaded
+        print(f'Downloading {len(records)} files:')
 
-        # Remove the units and measurement type rows
-        df = df.set_index('TIMESTAMP')
-        df.index = pd.to_datetime(df.index)
-        df = df.infer_objects()
-        df_all = pd.concat([df_all, df])
+        # build download url for each file
+        for record in tqdm.tqdm(records):
+            download_url = f"{record['url']}?auth_token={api_token}"
 
+            # check if file exists, if not downloads
+            file_path = dst_folder / record['filename']
+            if not file_path.is_file():
+                urllib.request.urlretrieve(download_url, file_path)
+
+        # create empty dataframe to store final data
+        df_all = pd.DataFrame()
+
+        # loop through all downloaded files
+        for i in list(dst_folder.glob('*.dat')):
+
+            # read data into dataframe discarding undesired header columns
+            df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN')
+
+            # generate datetimeindex
+            df = df.set_index('TIMESTAMP')
+            df.index = pd.to_datetime(df.index)
+
+            # optimize memory usage
+            # first get names of float, integer and object columns
+            float_cols = df.select_dtypes(include=['float64']).columns
+            integer_cols = df.select_dtypes(include=['int64']).columns
+            object_cols = df.select_dtypes(include=['object']).columns
+            # the assign dtype that uses least memory for each column
+            df[integer_cols] = df[integer_cols].apply(
+                pd.to_numeric, downcast='integer')
+            df[float_cols] = df[float_cols].apply(
+                pd.to_numeric, downcast='float')
+            # converting objects to category is only more memory efficient if
+            # less tha 50% of values are unique
+            for col in object_cols:
+                num_unique_values = len(df[col].unique())
+                num_total_values = len(df[col])
+                if num_unique_values / num_total_values < 0.5:
+                    df[col] = df[col].astype('category')
+
+            # append data
+            df_all = pd.concat([df_all, df])
+
+        # delete dst_folder if wanted
+        if not keep_files:
+            shutil.rmtree(dst_folder)
+
+    else:
+        # print number of records found
+        print(f'Loading {len(records)} files:')
+
+        # create empty dataframe to save data in
+        df_all = pd.DataFrame()
+
+        # loop through all records and generate progressbar
+        for record in tqdm.tqdm(records):
+            # build download url for each file
+            download_url = f"{record['url']}?auth_token={api_token}"
+            # get data
+            req = urllib.request.urlopen(download_url)
+            data = req.read()
+
+            # read data into dataframe discarding undesired header columns
+            df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                             skiprows=[0, 2, 3], na_values='NAN')
+            # generate datetimeindex
+            df = df.set_index('TIMESTAMP')
+            df.index = pd.to_datetime(df.index)
+
+            # infer data types of all other columns
+            df = df.infer_objects()
+
+            # append data
+            df_all = pd.concat([df_all, df])
+
+    # if from_date provided sort and trim data
     if 'from_date' in search_params:
         df_all = df_all[search_params['from_date']:].sort_index()
-
+    # if to_date provided sort and trim data
     if 'to_date' in search_params:
         df_all = df_all[:search_params['to_date']].sort_index()
 
