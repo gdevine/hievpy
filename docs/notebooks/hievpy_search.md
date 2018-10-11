@@ -69,7 +69,7 @@ As an example, to search for all records matching the filename 'DRL_AUTO_450LO_S
 import hievpy as hp
 ```
 
-##### Import the credentials file and set the API token
+##### Import the credentials file (or use your preset environment variable) and set the API token
 
 ```python
 import credentials as c

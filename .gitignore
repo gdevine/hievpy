@@ -11,4 +11,5 @@ hievpy.egg-info/requires.txt
 /examples/Downloads/
 /examples/credentials.py
 /examples/.ipynb_checkpoints/
+/examples/.md/
 /dist/
