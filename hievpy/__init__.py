@@ -171,14 +171,14 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
     -----
     Required
     - api_token: HIEv API token/key
-    - base_url: Base URL of the HIEv/Diver instance, e.g. 'https://hiev.uws.edu.au'
+    - base_url: Base URL of the HIEv/Diver instance, e.g. 'https://hiev.uws.edu.au/'
     - search_params: Object containing metadata key-value pairs for searching
     Optional:
     - biggish_data: boolean
         If True files will be downloaded and datatypes optimized for memory
         usage. Handy for large time series and/or using shitty computers.
     - keep_files: boolean
-        If Ture will keep files after importing into dataframe.
+        If True will keep files after importing into dataframe.
     - dst_folder: string
         Path to folder files will be downloaded to.
 
@@ -194,30 +194,35 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
     """
     # search records
     records = search(api_token, base_url, search_params)
-    # print number of records found
-    print(f'Loading {len(records)} files:')
 
+    # use 'biggish data' mode
     if biggish_data:
         # set and create download folder if it does not exist
         dst_folder = Path(dst_folder)
         if not dst_folder.is_dir():
             os.makedirs(dst_folder)
+
         # display number of files beeing downloaded
         print(f'Downloading {len(records)} files:')
+
+        # build download url for each file
         for record in tqdm.tqdm(records):
-            # build download url for each file
             download_url = f"{record['url']}?auth_token={api_token}"
+
             # check if file exists, if not downloads
             file_path = dst_folder / record['filename']
             if not file_path.is_file():
                 urllib.request.urlretrieve(download_url, file_path)
+
         # create empty dataframe to store final data
         df_all = pd.DataFrame()
+
         # loop through all downloaded files
         for i in list(dst_folder.glob('*.dat')):
-            print(i)
+
             # read data into dataframe discarding undesired header columns
             df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN')
+
             # generate datetimeindex
             df = df.set_index('TIMESTAMP')
             df.index = pd.to_datetime(df.index)
@@ -242,11 +247,15 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
 
             # append data
             df_all = pd.concat([df_all, df])
+
         # delete dst_folder if wanted
         if not keep_files:
             shutil.rmtree(dst_folder)
 
     else:
+        # print number of records found
+        print(f'Loading {len(records)} files:')
+
         # create empty dataframe to save data in
         df_all = pd.DataFrame()
 
