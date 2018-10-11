@@ -79,7 +79,7 @@ base_url = 'https://hiev.westernsydney.edu.au/'
 ## HIEvPy Functions
 
 ##### Generic functions
-- **search**: Return a list of HIEv records matching a set of input search parameters [read more...](notebooks/hievpy_search.md)
+- **search**: Return a list of HIEv records matching a set of input search parameters  [read more...](notebooks/hievpy_search.md)
 - **search_download**: Perform a hievpy search and automatically download the matching files [read more...](notebooks/hievpy_search_download.md)
 - **upload**: Upload a file to HIEv with associated metadata
 - **update_metadata**: Update metadata on a list of records returned by hievpy search
