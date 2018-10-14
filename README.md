@@ -49,10 +49,10 @@ See the project's [documentation pages](https://gdevine.github.io/hievpy) for a 
 ### Examples
 The __examples__ folder contains a number of example scripts outlining usage of the different **HIEvPy** functions. 
 
-To run any of the example scripts you need to create a file called *credentials.py* and populate it with your HIEv 
-API token, e.g:
+To run any of the example scripts you need to run hievpy.utils.make_credsfile() which creates a file github won't share called *credentials.py* and populates it with your HIEv API token
   
-    hiev_api_key = 'my_hiev_api_token'
+    import hievpy as hp
+    hp.utils.make_credsfile()
 
 
 ### License
