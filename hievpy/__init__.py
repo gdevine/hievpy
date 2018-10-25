@@ -246,7 +246,7 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
                     df[col] = df[col].astype('category')
 
             # append data
-            df_all = pd.concat([df_all, df])
+            df_all = pd.concat([df_all, df], sort=False)
 
         # delete dst_folder if wanted
         if not keep_files:
@@ -278,7 +278,8 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
             df = df.infer_objects()
 
             # append data
-            df_all = pd.concat([df_all, df])
+            df_all = pd.concat([df_all, df], sort=False)
+
 
     # if from_date provided sort and trim data
     if 'from_date' in search_params:
