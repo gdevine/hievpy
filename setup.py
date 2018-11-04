@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="hievpy",
-    version="0.3.2",
+    version="0.4.0",
     author="Gerard Devine, Dan Metzen",
     author_email="gerarddevine@gmail.com",
     description="Python 3 wrapper for the HIEv Data Capture Application API",
