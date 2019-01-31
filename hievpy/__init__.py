@@ -280,7 +280,6 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
             # append data
             df_all = pd.concat([df_all, df], sort=False)
 
-
     # if from_date provided sort and trim data
     if 'from_date' in search_params:
         df_all = df_all[search_params['from_date']:].sort_index()
@@ -289,3 +288,40 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
         df_all = df_all[:search_params['to_date']].sort_index()
 
     return df_all.sort_index()
+
+
+def logger_info(api_token, records):
+    """
+    Returns a dataframe with logger informations contained in the first
+    row of Campbell Sci TOA5 files.
+
+    Input
+    -----
+    Required
+    - api_token: HIEv API token/key
+    - records: record object from the results of the hievpy search function
+
+    Returns
+    -------
+    pandas dataframe with logger informations for each file
+    """
+
+    df_out = pd.DataFrame(columns=['file_type', 'station_name',
+                                   'logger_model', 'serial_no', 'os_version', 'logger_program',
+                                   'Dld_sig', 'table_name'])
+
+    for record in records:
+        if is_toa5(record):
+            download_url = f"{record['url']}?auth_token={api_token}"
+            req = urllib.request.urlopen(download_url)
+            data = req.read()
+            df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                             skiprows=0, header=None, nrows=1)
+            df = df.dropna(axis=1)
+            df.columns = ['file_type', 'station_name', 'logger_model',
+                                       'serial_no', 'os_version', 'logger_program',
+                                       'Dld_sig', 'table_name']
+            df_out.loc[record['filename']] = df.iloc[0]
+        else:
+            print('Error: This is not a TOA5 record')
+    return df_out
