@@ -310,7 +310,7 @@ def logger_info(api_token, records):
                                    'logger_model', 'serial_no', 'os_version', 'logger_program',
                                    'Dld_sig', 'table_name'])
 
-    for record in records:
+    for record in tqdm.tqdm(records):
         if is_toa5(record):
             download_url = f"{record['url']}?auth_token={api_token}"
             req = urllib.request.urlopen(download_url)
@@ -319,9 +319,9 @@ def logger_info(api_token, records):
                              skiprows=0, header=None, nrows=1)
             df = df.dropna(axis=1)
             df.columns = ['file_type', 'station_name', 'logger_model',
-                                       'serial_no', 'os_version', 'logger_program',
-                                       'Dld_sig', 'table_name']
+                          'serial_no', 'os_version', 'logger_program',
+                          'Dld_sig', 'table_name']
             df_out.loc[record['filename']] = df.iloc[0]
         else:
             print('Error: This is not a TOA5 record')
-    return df_out
+    return df_out.sort_index()
