@@ -164,7 +164,8 @@ def toa5_summary(api_token, record):
 
 
 def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
-                       keep_files=False, dst_folder='./raw_data'):
+                       keep_files=False, multiple_delim=False,
+                       dst_folder='./raw_data'):
     """ Performs a hievpy search and loads results into a pandas dataframe given the file records
 
     Input
@@ -221,7 +222,13 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
         for i in list(dst_folder.glob('*.dat')):
 
             # read data into dataframe discarding undesired header columns
-            df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN')
+            if multiple_delim:
+                df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN',
+                                 sep='\\t|,|;', engine='python')
+                df.columns = [i.replace('"', "") for i in df.columns]
+                df['TIMESTAMP'] = df['TIMESTAMP'].str.replace('"', '')
+            else:
+                df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN')
 
             # generate datetimeindex
             df = df.set_index('TIMESTAMP')
@@ -268,8 +275,16 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
             data = req.read()
 
             # read data into dataframe discarding undesired header columns
-            df = pd.read_csv(io.StringIO(data.decode('utf-8')),
-                             skiprows=[0, 2, 3], na_values='NAN')
+            if multiple_delim:
+                df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                                 skiprows=[0, 2, 3], na_values='NAN',
+                                 sep='\\t|,|;', engine='python')
+                df.columns = [i.replace('"', "") for i in df.columns]
+                df['TIMESTAMP'] = df['TIMESTAMP'].str.replace('"', '')
+            else:
+                df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                                 skiprows=[0, 2, 3], na_values='NAN')
+
             # generate datetimeindex
             df = df.set_index('TIMESTAMP')
             df.index = pd.to_datetime(df.index)
