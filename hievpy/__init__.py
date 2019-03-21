@@ -70,12 +70,14 @@ def search_download(api_token, base_url, search_params, path=None):
     # Download all files returned by the search to the specified folder path (if given)
     for record in tqdm.tqdm(records):
         download_url = f"{record['url']}?auth_token={api_token}"
-
         if path:
             download_path = Path(path) / record['filename']
-            urllib.request.urlretrieve(download_url, download_path)
         else:
-            urllib.request.urlretrieve(download_url, record['filename'])
+            download_path = record['filename']
+
+        # check if file exists, if not downloads
+        if not download_path.is_file():
+            urllib.request.urlretrieve(download_url, download_path)
 
 
 def upload(api_token, base_url, upload_file, metadata):
