@@ -99,9 +99,10 @@ def upload(api_token, base_url, upload_file, metadata):
 
     # Print out the outcome of the upload
     if response.status_code == 200:
-        print('File successfully uploaded to HIEv')
+        print(f'File {upload_file} successfully uploaded to HIEv')
     else:
-        print('ERROR - There was a problem uploading the file to HIEv')
+        print(
+            f'ERROR - There was a problem uploading file {upload_file} to HIEv')
 
 
 def update_metadata(api_token, base_url, records, updates):
