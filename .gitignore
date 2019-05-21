@@ -7,7 +7,7 @@
 
 Data/
 build/bdist.macosx-10.7-x86_64/
-hievpy.egg-info/requires.txt
+hievpy.egg-info/
 /examples/Downloads/
 /examples/credentials.py
 /examples/.ipynb_checkpoints/

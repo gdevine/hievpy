@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: hievpy
-Version: 0.4.0
+Version: 1.0.0
 Summary: Python 3 wrapper for the HIEv Data Capture Application API
 Home-page: https://github.com/gdevine/hievpy
 Author: Gerard Devine, Dan Metzen
