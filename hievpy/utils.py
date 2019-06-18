@@ -8,7 +8,7 @@ def make_credfile():
 
     """
     key = input("please paste hiev key and hit enter: ")
-    os.system("echo hiev_api_key='" + key+"' > credentials.py")
+    os.system("echo hiev_api_key='" + key + "' > credentials.py")
     # ensures credentials.py is not pushed to github
     os.system("echo credentials.py > .gitignore")
     print("Now you are ready to use\n\
