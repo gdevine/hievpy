@@ -19,10 +19,8 @@ To use HIEvPY you must have an active account (and subsequently a HIEv API token
 **HIEvPy** can be installed via *pip*:
 
 ``` bash
-$ pip install --index-url https://test.pypi.org/simple/ hievpy
+$ pip install hievpy
 ```
-
-> Note: HIEvPy is currently hosted on Test PyPi. This will soon be moved to the official PyPi repository
 
 Once **HIEvPy** has been installed, you can import it into a python console or script using:
 
