@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: hievpy
-Version: 1.0.0
+Version: 1.2.0
 Summary: Python 3 wrapper for the HIEv Data Capture Application API
 Home-page: https://github.com/gdevine/hievpy
 Author: Gerard Devine, Dan Metzen
@@ -57,10 +57,10 @@ Description:
         ### Examples
         The __examples__ folder contains a number of example scripts outlining usage of the different **HIEvPy** functions. 
         
-        To run any of the example scripts you need to create a file called *credentials.py* and populate it with your HIEv 
-        API token, e.g:
+        To run any of the example scripts you need to run hievpy.utils.make_credsfile() which creates a file github won't share called *credentials.py* and populates it with your HIEv API token
           
-            hiev_api_key = 'my_hiev_api_token'
+            import hievpy as hp
+            hp.utils.make_credsfile()
         
         
         ### License

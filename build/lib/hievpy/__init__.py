@@ -70,12 +70,14 @@ def search_download(api_token, base_url, search_params, path=None):
     # Download all files returned by the search to the specified folder path (if given)
     for record in tqdm.tqdm(records):
         download_url = f"{record['url']}?auth_token={api_token}"
-
         if path:
             download_path = Path(path) / record['filename']
-            urllib.request.urlretrieve(download_url, download_path)
         else:
-            urllib.request.urlretrieve(download_url, record['filename'])
+            download_path = record['filename']
+
+        # check if file exists, if not downloads
+        if not download_path.is_file():
+            urllib.request.urlretrieve(download_url, download_path)
 
 
 def upload(api_token, base_url, upload_file, metadata):
@@ -97,9 +99,10 @@ def upload(api_token, base_url, upload_file, metadata):
 
     # Print out the outcome of the upload
     if response.status_code == 200:
-        print('File successfully uploaded to HIEv')
+        print(f'File {upload_file} successfully uploaded to HIEv')
     else:
-        print('ERROR - There was a problem uploading the file to HIEv')
+        print(
+            f'ERROR - There was a problem uploading file {upload_file} to HIEv')
 
 
 def update_metadata(api_token, base_url, records, updates):
@@ -164,7 +167,8 @@ def toa5_summary(api_token, record):
 
 
 def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
-                       keep_files=False, dst_folder='./raw_data'):
+                       keep_files=False, multiple_delim=False,
+                       dst_folder='./raw_data'):
     """ Performs a hievpy search and loads results into a pandas dataframe given the file records
 
     Input
@@ -221,7 +225,13 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
         for i in list(dst_folder.glob('*.dat')):
 
             # read data into dataframe discarding undesired header columns
-            df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN')
+            if multiple_delim:
+                df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN',
+                                 sep='\\t|,|;', engine='python')
+                df.columns = [i.replace('"', "") for i in df.columns]
+                df['TIMESTAMP'] = df['TIMESTAMP'].str.replace('"', '')
+            else:
+                df = pd.read_csv(i, skiprows=[0, 2, 3], na_values='NAN')
 
             # generate datetimeindex
             df = df.set_index('TIMESTAMP')
@@ -268,8 +278,16 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
             data = req.read()
 
             # read data into dataframe discarding undesired header columns
-            df = pd.read_csv(io.StringIO(data.decode('utf-8')),
-                             skiprows=[0, 2, 3], na_values='NAN')
+            if multiple_delim:
+                df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                                 skiprows=[0, 2, 3], na_values='NAN',
+                                 sep='\\t|,|;', engine='python')
+                df.columns = [i.replace('"', "") for i in df.columns]
+                df['TIMESTAMP'] = df['TIMESTAMP'].str.replace('"', '')
+            else:
+                df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                                 skiprows=[0, 2, 3], na_values='NAN')
+
             # generate datetimeindex
             df = df.set_index('TIMESTAMP')
             df.index = pd.to_datetime(df.index)
@@ -280,12 +298,48 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
             # append data
             df_all = pd.concat([df_all, df], sort=False)
 
-
     # if from_date provided sort and trim data
     if 'from_date' in search_params:
-        df_all = df_all[search_params['from_date']:].sort_index()
+        df_all = df_all.sort_index()[search_params['from_date']:]
     # if to_date provided sort and trim data
     if 'to_date' in search_params:
-        df_all = df_all[:search_params['to_date']].sort_index()
+        df_all = df_all.sort_index()[:search_params['to_date']]
 
-    return df_all.sort_index()
+    return df_all.drop_duplicates()
+
+
+def logger_info(api_token, records):
+    """
+    Returns a dataframe with logger informations contained in the first
+    row of Campbell Sci TOA5 files.
+
+    Input
+    -----
+    Required
+    - api_token: HIEv API token/key
+    - records: record object from the results of the hievpy search function
+
+    Returns
+    -------
+    pandas dataframe with logger informations for each file
+    """
+
+    df_out = pd.DataFrame(columns=['file_type', 'station_name',
+                                   'logger_model', 'serial_no', 'os_version', 'logger_program',
+                                   'Dld_sig', 'table_name'])
+
+    for record in tqdm.tqdm(records):
+        if is_toa5(record):
+            download_url = f"{record['url']}?auth_token={api_token}"
+            req = urllib.request.urlopen(download_url)
+            data = req.read()
+            df = pd.read_csv(io.StringIO(data.decode('utf-8')),
+                             skiprows=0, header=None, nrows=1)
+            df = df.dropna(axis=1)
+            df.columns = ['file_type', 'station_name', 'logger_model',
+                          'serial_no', 'os_version', 'logger_program',
+                          'Dld_sig', 'table_name']
+            df_out.loc[record['filename']] = df.iloc[0]
+        else:
+            print('Error: This is not a TOA5 record')
+    return df_out.sort_index()

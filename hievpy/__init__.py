@@ -300,12 +300,12 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
 
     # if from_date provided sort and trim data
     if 'from_date' in search_params:
-        df_all = df_all[search_params['from_date']:].sort_index()
+        df_all = df_all.sort_index()[search_params['from_date']:]
     # if to_date provided sort and trim data
     if 'to_date' in search_params:
-        df_all = df_all[:search_params['to_date']].sort_index()
+        df_all = df_all.sort_index()[:search_params['to_date']]
 
-    return df_all.sort_index()
+    return df_all.drop_duplicates()
 
 
 def logger_info(api_token, records):
