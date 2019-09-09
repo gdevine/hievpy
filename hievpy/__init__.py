@@ -210,11 +210,14 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
         print(f'Downloading {len(records)} files:')
 
         # build download url for each file
+        file_list = []
         for record in tqdm.tqdm(records):
             download_url = f"{record['url']}?auth_token={api_token}"
 
             # check if file exists, if not downloads
             file_path = dst_folder / record['filename']
+            file_list.append(file_path)
+
             if not file_path.is_file():
                 urllib.request.urlretrieve(download_url, file_path)
 
@@ -222,7 +225,8 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
         df_all = pd.DataFrame()
 
         # loop through all downloaded files
-        for i in list(dst_folder.glob('*.dat')):
+        for i in file_list:
+            print(i)
 
             # read data into dataframe discarding undesired header columns
             if multiple_delim:
