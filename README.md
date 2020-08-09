@@ -51,6 +51,9 @@ To run any of the example scripts you need to run hievpy.utils.make_credsfile() 
   
     import hievpy as hp
     hp.utils.make_credsfile()
+    
+### Contact
+For questions, please contact Gerard Devine (g.devine@westernsydney.edu.au) or Dan Metzen (d.metzen@westernsydney.edu.au) 
 
 
 ### License
