@@ -302,14 +302,17 @@ def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
             # append data
             df_all = pd.concat([df_all, df], sort=False)
 
+    # make sure data is sorted and contains no duplicates
+    df_all = df_all.drop_duplicates().sort_index()
+
     # if from_date provided sort and trim data
     if 'from_date' in search_params:
-        df_all = df_all.sort_index()[search_params['from_date']:]
+        df_all = df_all[search_params['from_date']:]
     # if to_date provided sort and trim data
     if 'to_date' in search_params:
-        df_all = df_all.sort_index()[:search_params['to_date']]
+        df_all = df_all[:search_params['to_date']]
 
-    return df_all.drop_duplicates()
+    return df_all
 
 
 def logger_info(api_token, records):
