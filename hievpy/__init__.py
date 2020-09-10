@@ -167,7 +167,7 @@ def toa5_summary(api_token, record):
 
 
 def search_load_toa5df(api_token, base_url, search_params, biggish_data=False,
-                       keep_files=False, multiple_delim=False,
+                       keep_files=True, multiple_delim=False,
                        dst_folder='./raw_data'):
     """ Performs a hievpy search and loads results into a pandas dataframe given the file records
 
